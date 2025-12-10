@@ -5,12 +5,13 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.TestModule;
 import frc.robot.subsystems.SwerveBase;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-@SuppressWarnings("unused")
 public class RobotContainer {
   //? The robot's subsystems and commands are defined here...
   private final SwerveBase m_SwerveBase = new SwerveBase();
@@ -26,13 +27,22 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    m_driverController.a().onTrue(m_SwerveBase.run(() -> {
-      m_SwerveBase.m_frontRight.setDrivePower(0.5);
-    }));
+    SmartDashboard.putString("Configuring Bindings", "Begin");
+    m_driverController.y().whileTrue(new TestModule(
+        m_SwerveBase.m_frontRight, m_driverController
+    ));
+    m_driverController.b().whileTrue(new TestModule(
+        m_SwerveBase.m_frontLeft, m_driverController
+    ));
+    m_driverController.a().whileTrue(new TestModule(
+        m_SwerveBase.m_backLeft, m_driverController
+    ));
+    m_driverController.x().whileTrue(new TestModule(
+        m_SwerveBase.m_backRight, m_driverController
+    ));
   }
 
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
     return null;
   }
 }

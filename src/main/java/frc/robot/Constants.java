@@ -18,18 +18,18 @@ public final class Constants {
   }
 
   public static class CANConstants {
-    public static final int kPidgeonID = 0;
-    public static final int kFrontRightDriveMotorID = 10;
-    public static final int kFrontRightTurnMotorID = 11;
-    public static final int kFrontRightEncoderID = 12;
-    public static final int kFrontLeftDriveMotorID = 13;
-    public static final int kFrontLeftDriveTurnID = 14;
-    public static final int kFrontLeftEncoderID = 15;
-    public static final int kBackLeftDriveMotorID = 16;
-    public static final int kBackLeftTurnMotorID = 17;
-    public static final int kBackLeftEncoderID = 18;
-    public static final int kBackRightDriveMotorID = 19;
-    public static final int kBackRightTurnMotorID = 20;
-    public static final int kBackRightEncoderID = 21;
+    public static final int kPigeonID = 0;
+    public static final int kFrontRightDriveMotorID = 1;
+    public static final int kFrontRightTurnMotorID = 2;
+    public static final int kFrontRightEncoderID = 3; // TODO
+    public static final int kFrontLeftDriveMotorID = 4;
+    public static final int kFrontLeftDriveTurnID = 5;
+    public static final int kFrontLeftEncoderID = 6; // TODO
+    public static final int kBackLeftDriveMotorID = 7;
+    public static final int kBackLeftTurnMotorID = 8;
+    public static final int kBackLeftEncoderID = 9; // TODO
+    public static final int kBackRightDriveMotorID = 10;
+    public static final int kBackRightTurnMotorID = 11;
+    public static final int kBackRightEncoderID = 12; // TODO
   }
 }
