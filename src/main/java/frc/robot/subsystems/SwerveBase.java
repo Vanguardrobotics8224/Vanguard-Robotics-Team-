@@ -71,6 +71,13 @@ public class SwerveBase extends SubsystemBase {
     
   }
 
+  public void setTranslationPower(double power) {
+    m_frontRight.setDrivePower(power);
+    m_frontLeft.setDrivePower(power);
+    m_backLeft.setDrivePower(power);
+    m_backRight.setDrivePower(power);
+  }
+
   public void stopAllModules() {
     m_frontRight.stopModule();
     m_frontLeft.stopModule();

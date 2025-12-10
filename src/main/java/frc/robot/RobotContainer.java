@@ -5,6 +5,8 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ModulesDriveToPower;
+import frc.robot.commands.ModuleTurnToAngle;
 import frc.robot.commands.TestModule;
 import frc.robot.subsystems.SwerveBase;
 
@@ -28,18 +30,22 @@ public class RobotContainer {
 
   private void configureBindings() {
     SmartDashboard.putString("Configuring Bindings", "Begin");
-    m_driverController.y().whileTrue(new TestModule(
+    m_driverController.y().whileTrue(new ModuleTurnToAngle(
         m_SwerveBase.m_frontRight, m_driverController
     ));
-    m_driverController.b().whileTrue(new TestModule(
+    m_driverController.b().whileTrue(new ModuleTurnToAngle(
         m_SwerveBase.m_frontLeft, m_driverController
     ));
-    m_driverController.a().whileTrue(new TestModule(
+    m_driverController.a().whileTrue(new ModuleTurnToAngle(
         m_SwerveBase.m_backLeft, m_driverController
     ));
-    m_driverController.x().whileTrue(new TestModule(
+    m_driverController.x().whileTrue(new ModuleTurnToAngle(
         m_SwerveBase.m_backRight, m_driverController
     ));
+    m_driverController.rightBumper().whileTrue(new ModulesDriveToPower(
+      m_SwerveBase, m_driverController));
+    // m_driverController.povLeft().whileTrue(new ModuleTurnToAngle(
+      // m_SwerveBase.m_backRight, 90));
   }
 
   public Command getAutonomousCommand() {

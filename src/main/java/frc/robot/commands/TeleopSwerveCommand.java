@@ -15,7 +15,7 @@ public class TeleopSwerveCommand extends Command {
   /** Creates a new TeleopSwerveCommand. */
   public TeleopSwerveCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_swerveBase);
+    // addRequirements(m_swerveBase);
   }
 
   // Called when the command is initially scheduled.

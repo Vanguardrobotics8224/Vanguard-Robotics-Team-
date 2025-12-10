@@ -65,40 +65,40 @@ public class SwerveModule extends SubsystemBase {
     return m_encoder.getAbsolutePosition().getValueAsDouble() * 360;
   }
 
-  public Command turnTo(double angle) {
-    return new Command() {
+  // public Command turnTo(double angle) {
+  //   return new Command() {
 
-      private final SwerveModule m_swerveModule = SwerveModule.this;
-      private final double m_targetAngle = angle;
-      private double m_error;
+  //     private final SwerveModule m_swerveModule = SwerveModule.this;
+  //     private final double m_targetAngle = angle;
+  //     private double m_error;
 
-      // Called when the command is initially scheduled.
-      @Override
-      public void initialize() {
-        m_error = (m_targetAngle - m_swerveModule.getCurrentAngle()) / 360;
-        m_swerveModule.setTurnPower(0);
-      }
+  //     // Called when the command is initially scheduled.
+  //     @Override
+  //     public void initialize() {
+  //       m_error = (m_targetAngle - m_swerveModule.getCurrentAngle()) / 360;
+  //       m_swerveModule.setTurnPower(0);
+  //     }
 
-      // Called every time the scheduler runs while the command is scheduled.
-      @Override
-      public void execute() {
-        m_error = (m_targetAngle - (m_swerveModule.getCurrentAngle())) / 360;
-        m_swerveModule.setTurnPower(m_error * 0.1);
-      }
+  //     // Called every time the scheduler runs while the command is scheduled.
+  //     @Override
+  //     public void execute() {
+  //       m_error = (m_targetAngle - (m_swerveModule.getCurrentAngle())) / 360;
+  //       m_swerveModule.setTurnPower(m_error * 0.1);
+  //     }
 
-      // Called once the command ends or is interrupted.
-      @Override
-      public void end(boolean interrupted) {
-        m_swerveModule.setTurnPower(0);
-      }
+  //     // Called once the command ends or is interrupted.
+  //     @Override
+  //     public void end(boolean interrupted) {
+  //       m_swerveModule.setTurnPower(0);
+  //     }
 
-      // Returns true when the command should end.
-      @Override
-      public boolean isFinished() {
-        return Math.abs(m_error) < 0.05;
-      }
-    };
-  }
+  //     // Returns true when the command should end.
+  //     @Override
+  //     public boolean isFinished() {
+  //       return Math.abs(m_error) < 0.05;
+  //     }
+  //   };
+  // }
 
   public void stopModule() {
     setDrivePower(0);
