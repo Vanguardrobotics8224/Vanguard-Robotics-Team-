@@ -41,7 +41,7 @@ public class TestModule extends Command {
   @Override
   public void end(boolean interrupted) {
     m_swerveModule.setDrivePower(0);
-    m_swerveModule.setTurnPower(0);  
+    m_swerveModule.setTurnPower(0);
 
   }
 
