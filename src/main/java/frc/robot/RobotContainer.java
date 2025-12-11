@@ -5,9 +5,8 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.ModulesDriveToPower;
-import frc.robot.commands.ModuleTurnToAngle;
-import frc.robot.commands.TestModule;
+import frc.robot.commands.SwerveBase.ModulesDriveToPower;
+import frc.robot.commands.SwerveModule.ModuleTurnToAngle;
 import frc.robot.subsystems.SwerveBase;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
