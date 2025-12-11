@@ -60,7 +60,7 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public double getCurrentAngle() {
-    return m_encoder.getAbsolutePosition().getValueAsDouble() * 360;
+    return m_encoder.getAbsolutePosition().getValueAsDouble();
   }
 
   public void stopModule() {
