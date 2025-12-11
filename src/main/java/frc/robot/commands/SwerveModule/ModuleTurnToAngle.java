@@ -39,18 +39,29 @@ public class ModuleTurnToAngle extends Command {
   @Override
   public void initialize() {
     m_targetAngle = Math.toDegrees(Math.atan2(m_controller.getLeftY(), -m_controller.getLeftX()));
+    if (m_targetAngle < 0) m_targetAngle += 360; //? Normalize to 0-360 degrees
+
     m_error = (m_targetAngle - (m_swerveModule.getCurrentAngle()));
+    if (m_error < 0) m_error += 360; //? Normalize to 0-360 degrees
+
     m_swerveModule.setTurnPower(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (0.1 < (Math.sqrt(m_controller.getLeftX() * m_controller.getLeftX() + m_controller.getLeftY() * m_controller.getLeftY()))) {
+      m_targetAngle = Math.toDegrees(Math.atan2(m_controller.getLeftY(), -m_controller.getLeftX()));
+      if (m_targetAngle < 0) m_targetAngle += 360; //? Normalize to 0-360 degrees
+    }
+
+    m_error = (m_targetAngle - (m_swerveModule.getCurrentAngle()));
+    if (m_error < 0) m_error += 360; //? Normalize to 0-360 degrees
+
     SmartDashboard.putNumber("Error", m_error);
     SmartDashboard.putNumber("Target Angle", m_targetAngle);
-    m_targetAngle = Math.toDegrees(Math.atan2(m_controller.getLeftY(), -m_controller.getLeftX()));
-    m_error = (m_targetAngle - (m_swerveModule.getCurrentAngle()));
-    m_swerveModule.setTurnPower(m_error * -0.0005);
+
+    m_swerveModule.setTurnPower(m_error / 360 * -0.5);
   }
 
   // Called once the command ends or is interrupted.
@@ -62,6 +73,6 @@ public class ModuleTurnToAngle extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false; // Math.abs(m_error) < 0.05
+    return false;
   }
 }
