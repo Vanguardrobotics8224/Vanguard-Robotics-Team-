@@ -8,4 +8,5 @@ public final class MotorIds {
     public static final int leftIntakePivotMotorId = 12;
     public static final int rightIntakePivotMotorId = 13;
     public static final int intakeMotorId = 14;
+    public static final int shooterBeltMotorId = 15;
 }

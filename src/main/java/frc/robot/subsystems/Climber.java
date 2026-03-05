@@ -4,13 +4,8 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SoftLimitConfig;
-import com.revrobotics.spark.config.SparkBaseConfig;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,13 +13,18 @@ import frc.robot.MotorIds;
 
 public class Climber extends SubsystemBase {
 
-  private final SparkMax climberMotor = new SparkMax(MotorIds.climberMotorId, MotorType.kBrushless);
-  private final SparkBaseConfig climberMotorConfig = new SparkMaxConfig().apply(new SoftLimitConfig()
-      .forwardSoftLimit(0).reverseSoftLimit(0).forwardSoftLimitEnabled(true).reverseSoftLimitEnabled(true));
+  // Find the threshold through Tuner X, look at the encoder position when at the
+  // correct height
+  private final double forwardThreshold = 500;
+  private final double reverseThreshold = 0;
+
+  private final TalonFX climberMotor = new TalonFX(MotorIds.climberMotorId);
 
   /** Creates a new Climber. */
   public Climber() {
-    climberMotor.configure(climberMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    climberMotor.getConfigurator()
+        .apply(new SoftwareLimitSwitchConfigs().withForwardSoftLimitEnable(true).withReverseSoftLimitEnable(true)
+            .withForwardSoftLimitThreshold(forwardThreshold).withReverseSoftLimitThreshold(reverseThreshold));
   }
 
   public Command set(double speed) {
@@ -32,11 +32,11 @@ public class Climber extends SubsystemBase {
   }
 
   public Command extend() {
-    return set(0.5).until(() -> climberMotor.getEncoder().getPosition() > 500);
+    return set(0.5).until(() -> climberMotor.getPosition().getValueAsDouble() >= forwardThreshold - 1);
   }
 
   public Command retract() {
-    return set(-0.8).until(() -> climberMotor.getEncoder().getPosition() < 10);
+    return set(-0.8).until(() -> climberMotor.getPosition().getValueAsDouble() <= reverseThreshold + 1);
   }
 
   @Override

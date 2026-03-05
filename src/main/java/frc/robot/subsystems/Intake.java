@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.Seconds;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
@@ -28,16 +29,17 @@ import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
-import yams.motorcontrollers.local.SparkWrapper;
+import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class Intake extends SubsystemBase {
 
-  public class PivotSubsystem extends SubsystemBase {}
+  public class PivotSubsystem extends SubsystemBase {
+  }
 
   private final TelemetryVerbosity telemetryVerbosity = TelemetryVerbosity.HIGH;
 
-  private final SparkMax leftPivotMotor = new SparkMax(MotorIds.leftIntakePivotMotorId, MotorType.kBrushless);
-  private final SparkMax rightPivotMotor = new SparkMax(MotorIds.rightIntakePivotMotorId, MotorType.kBrushless);
+  private final TalonFX leftPivotMotor = new TalonFX(MotorIds.leftIntakePivotMotorId);
+  private final TalonFX rightPivotMotor = new TalonFX(MotorIds.rightIntakePivotMotorId);
 
   private final SparkMax inatakeMotor = new SparkMax(MotorIds.intakeMotorId, MotorType.kBrushless);
 
@@ -56,13 +58,13 @@ public class Intake extends SubsystemBase {
       .withClosedLoopRampRate(Seconds.of(0.25))
       .withOpenLoopRampRate(Seconds.of(0.25));
 
-  private final SmartMotorController pivotMotorController = new SparkWrapper(rightPivotMotor, DCMotor.getNEO(2),
+  private final SmartMotorController pivotMotorController = new TalonFXWrapper(rightPivotMotor, DCMotor.getNEO(2),
       pivotMotorConfig);
 
   private final ArmConfig pivotConfig = new ArmConfig(pivotMotorController)
       .withSoftLimits(Degrees.of(0), Degrees.of(90))
       .withHardLimit(Degrees.of(-5), Degrees.of(95))
-      .withStartingPosition(Degrees.of(0))
+      .withStartingPosition(Degrees.of(90))
       .withLength(Inches.of(18))
       .withMass(Pounds.of(10))
       .withTelemetry("Pivot", telemetryVerbosity);
