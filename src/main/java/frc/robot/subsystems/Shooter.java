@@ -40,6 +40,7 @@ public class Shooter extends SubsystemBase {
   private final TalonFX rightShooterMotor = new TalonFX(MotorIds.rightShooterMotorId);
 
   private final SparkMax indexerMotor = new SparkMax(MotorIds.indexerMotorId, MotorType.kBrushless);
+  private final SparkMax beltMotor = new SparkMax(MotorIds.shooterBeltMotorId, MotorType.kBrushless);
 
   private final FlyWheelSubsystem flyWheelSubsystem = new FlyWheelSubsystem();
 
@@ -86,10 +87,12 @@ public class Shooter extends SubsystemBase {
         .andThen(run(() -> {
           shooter.setSpeed(speed);
           indexerMotor.set(0.5);
+          beltMotor.set(0.5);
         }))
         .finallyDo(() -> {
           shooter.setDutyCycleSetpoint(0);
           indexerMotor.set(0);
+          beltMotor.set(0);
         });
   }
 
