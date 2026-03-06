@@ -17,6 +17,9 @@ public class Climber extends SubsystemBase {
   // correct height
   private final double forwardThreshold = 500;
   private final double reverseThreshold = 0;
+  private final double thresholdOffset = 2;
+  private final double forwardSpeed = 0.5;
+  private final double reverseSpeed = -0.8;
 
   private final TalonFX climberMotor = new TalonFX(MotorIds.climberMotorId);
 
@@ -32,11 +35,11 @@ public class Climber extends SubsystemBase {
   }
 
   public Command extend() {
-    return set(0.5).until(() -> climberMotor.getPosition().getValueAsDouble() >= forwardThreshold - 1);
+    return set(forwardSpeed).until(() -> climberMotor.getPosition().getValueAsDouble() >= forwardThreshold - thresholdOffset);
   }
 
   public Command retract() {
-    return set(-0.8).until(() -> climberMotor.getPosition().getValueAsDouble() <= reverseThreshold + 1);
+    return set(reverseSpeed).until(() -> climberMotor.getPosition().getValueAsDouble() <= reverseThreshold + thresholdOffset);
   }
 
   @Override
