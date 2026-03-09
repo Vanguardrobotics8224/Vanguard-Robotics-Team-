@@ -96,6 +96,10 @@ public class Shooter extends SubsystemBase {
         });
   }
 
+  public Command shootNoIndexer(AngularVelocity speed) {
+    return shooter.run(speed);
+  }
+
   public Command stop() {
     return shooter.set(0);
   }
