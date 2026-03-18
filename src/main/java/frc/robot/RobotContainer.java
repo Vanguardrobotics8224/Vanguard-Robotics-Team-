@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
@@ -15,6 +16,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -52,8 +54,12 @@ public class RobotContainer {
     public final Intake intake = new Intake();
     public final Climber climber = new Climber();
 
+    public final ComplexCommands complexCommands = new ComplexCommands(climber, drivetrain, intake, shooter);
+
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
+
+    private final AngularVelocity shooterSpeed = RotationsPerSecond.of(70);
 
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
@@ -89,9 +95,12 @@ public class RobotContainer {
         // shooter.setDefaultCommand(shooter.stop());
 
         joystick.a().whileTrue(intake.runIntake());
-        joystick.b().whileTrue(shooter.shoot(RotationsPerSecond.of(70)));
+        joystick.b().whileTrue(shooter.shoot(shooterSpeed));
         joystick.y().whileTrue(climber.extend());
         joystick.x().whileTrue(climber.retract());
+
+
+        joystick.start().whileTrue(complexCommands.aimAndShoot(shooterSpeed, Meters.of(2)));
 
         // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // joystick.b().whileTrue(drivetrain.applyRequest(
