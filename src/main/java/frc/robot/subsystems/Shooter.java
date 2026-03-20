@@ -104,6 +104,26 @@ public class Shooter extends SubsystemBase {
     return shooter.set(0);
   }
 
+  /**
+   * Reverse shooter wheel, indexer, and belt together for outtaking.
+   *
+   * @param speed target shooter speed magnitude
+   * @return Command to schedule while held
+   */
+  public Command reverseAll(AngularVelocity speed) {
+    return startEnd(
+        () -> {
+          shooter.setSpeed(speed.times(-1));
+          indexerMotor.set(0.5);
+          beltMotor.set(0.5);
+        },
+        () -> {
+          shooter.setDutyCycleSetpoint(0);
+          indexerMotor.set(0);
+          beltMotor.set(0);
+        });
+  }
+
   public Command reverseIndexer() {
     return startEnd(
         () -> {
