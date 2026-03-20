@@ -77,7 +77,7 @@ public class Intake extends SubsystemBase {
   }
 
   public Command runIntake() {
-    return pivot.run(Degrees.of(5)).alongWith(runEnd(() -> inatakeMotor.set(1), () -> inatakeMotor.set(0)))
+    return pivot.run(Degrees.of(5)).alongWith(runEnd(() -> inatakeMotor.set(-.5), () -> inatakeMotor.set(0)))
         .finallyDo(() -> pivot.setMechanismPositionSetpoint(Degrees.of(85)));
   }
 

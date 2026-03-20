@@ -86,8 +86,8 @@ public class Shooter extends SubsystemBase {
     return shooter.runTo(speed, speed.times(0.05))
         .andThen(run(() -> {
           shooter.setSpeed(speed);
-          indexerMotor.set(0.5);
-          beltMotor.set(0.5);
+          indexerMotor.set(-0.5);
+          beltMotor.set(-0.5);
         }))
         .finallyDo(() -> {
           shooter.setDutyCycleSetpoint(0);
