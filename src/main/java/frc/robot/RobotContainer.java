@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
@@ -59,7 +58,7 @@ public class RobotContainer {
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
 
-    private final AngularVelocity shooterSpeed = RotationsPerSecond.of(70);
+    private final AngularVelocity shooterSpeed = RPM.of(6000);
 
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
@@ -97,7 +96,7 @@ public class RobotContainer {
         joystick.a().whileTrue(intake.runIntake()); // Hold A for pickup
         joystick.rightBumper().onTrue(intake.lift()); // Press RB to lift the intake
         joystick.leftBumper().onTrue(shooter.reverseIndexer().alongWith(intake.reverse())); // Hold LB to reverse pickup
-        joystick.b().whileTrue(complexCommands.aimAndShoot(shooterSpeed, Meters.of(2))); // Hold B to aim and shoot
+        joystick.b().whileTrue(complexCommands.shootWithIntake(shooterSpeed)); // Hold B to spin up then feed
         joystick.povUp().whileTrue(climber.extend()); // Hold POV up to extend the climber
         joystick.povDown().whileTrue(climber.retract()); // Hold POV down to retract the climber
 

@@ -101,4 +101,18 @@ public class ComplexCommands {
                 .andThen(shooter.shoot(speed));
     }
 
+    /**
+     * Spins up the shooter first, then starts feeding with the intake once the
+     * shooter is at speed.
+     *
+     * @param speed Speed for the shooter wheel
+     * @return Command that performs the task while held
+     */
+    public Command shootWithIntake(AngularVelocity speed) {
+        return Commands.deadline(
+                shooter.shoot(speed),
+                Commands.waitUntil(() -> shooter.getVelocity().gte(speed.times(0.95)))
+                        .andThen(intake.runIntake()));
+    }
+
 }
