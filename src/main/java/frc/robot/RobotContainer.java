@@ -96,7 +96,7 @@ public class RobotContainer {
 
         joystick.a().whileTrue(intake.runIntake()); // Hold A for pickup
         joystick.rightBumper().onTrue(intake.lift()); // Press RB to lift the intake
-        joystick.leftBumper().onTrue(shooter.reverseIndexer().alongWith(intake.reverse())); // Hold LB to reverse pickup
+        joystick.leftBumper().whileTrue(shooter.reverseIndexer().alongWith(intake.reverse())); // Hold LB to reverse pickup
         joystick.b().whileTrue(shooter.shoot(shooterSpeed)); // Hold B to run shooter and indexer
         joystick.povUp().whileTrue(climber.extend()); // Hold POV up to extend the climber
         joystick.povDown().whileTrue(climber.retract()); // Hold POV down to retract the climber

@@ -127,8 +127,8 @@ public class Shooter extends SubsystemBase {
   public Command reverseIndexer() {
     return startEnd(
         () -> {
-          indexerMotor.set(-0.5);
-          beltMotor.set(-0.5);
+          indexerMotor.set(0.5);
+          beltMotor.set(0.5);
         }, () -> {
           indexerMotor.set(0);
           beltMotor.set(0);

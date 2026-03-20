@@ -81,7 +81,7 @@ public class Intake extends SubsystemBase {
   }
 
   public Command runIntake() {
-    return pivot.run(pivotDownSetpoint).alongWith(runEnd(() -> inatakeMotor.set(0.5), () -> inatakeMotor.set(0)));
+    return pivot.run(pivotDownSetpoint).alongWith(runEnd(() -> inatakeMotor.set(-0.5), () -> inatakeMotor.set(0)));
   }
 
   public Command lift() {
