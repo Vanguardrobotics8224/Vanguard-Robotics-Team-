@@ -37,7 +37,7 @@ public class RobotContainer {
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDeadband(MaxSpeed * 0.15).withRotationalDeadband(MaxAngularRate * 0.15) // Add a 15% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -94,13 +94,17 @@ public class RobotContainer {
 
         // shooter.setDefaultCommand(shooter.stop());
 
-        joystick.a().whileTrue(intake.runIntake());
-        joystick.b().whileTrue(shooter.shoot(shooterSpeed));
-        joystick.y().whileTrue(climber.extend());
-        joystick.x().whileTrue(climber.retract());
+        joystick.a().whileTrue(intake.runIntake()); // Hold A for pickup
+        joystick.rightBumper().onTrue(intake.lift()); // Press RB to lift the intake
+        joystick.leftBumper().onTrue(shooter.reverseIndexer().alongWith(intake.reverse())); // Hold LB to reverse pickup
+        joystick.b().whileTrue(complexCommands.aimAndShoot(shooterSpeed, Meters.of(2))); // Hold B to aim and shoot
+        joystick.povUp().whileTrue(climber.extend()); // Hold POV up to extend the climber
+        joystick.povDown().whileTrue(climber.retract()); // Hold POV down to retract the climber
 
+        //joystick.y().whileTrue(shooter.shoot(shooterSpeed)); // Hold to shoot without prior aiming
 
-        joystick.start().whileTrue(complexCommands.aimAndShoot(shooterSpeed, Meters.of(2)));
+        // Reset the field-centric heading on left bumper press.
+        joystick.start().and(joystick.back()).onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // joystick.b().whileTrue(drivetrain.applyRequest(
@@ -119,9 +123,6 @@ public class RobotContainer {
         // joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         // joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         // joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
-        // // Reset the field-centric heading on left bumper press.
-        // joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

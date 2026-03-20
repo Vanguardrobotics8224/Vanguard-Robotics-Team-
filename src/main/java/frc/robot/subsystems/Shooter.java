@@ -104,6 +104,17 @@ public class Shooter extends SubsystemBase {
     return shooter.set(0);
   }
 
+  public Command reverseIndexer() {
+    return startEnd(
+        () -> {
+          indexerMotor.set(-0.5);
+          beltMotor.set(-0.5);
+        }, () -> {
+          indexerMotor.set(0);
+          beltMotor.set(0);
+        });
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

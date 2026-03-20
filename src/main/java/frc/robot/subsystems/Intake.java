@@ -17,6 +17,7 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.MotorIds;
@@ -42,6 +43,9 @@ public class Intake extends SubsystemBase {
   private final TalonFX rightPivotMotor = new TalonFX(MotorIds.rightIntakePivotMotorId);
 
   private final SparkMax inatakeMotor = new SparkMax(MotorIds.intakeMotorId, MotorType.kBrushless);
+
+  private final Angle pivotUpSetpoint = Degrees.of(85);
+  private final Angle pivotDownSetpoint = Degrees.of(5);
 
   private final PivotSubsystem pivotSubsystem = new PivotSubsystem();
 
@@ -77,6 +81,14 @@ public class Intake extends SubsystemBase {
   }
 
   public Command runIntake() {
+    return pivot.run(pivotDownSetpoint).alongWith(runEnd(() -> inatakeMotor.set(1), () -> inatakeMotor.set(0)));
+  }
+
+  public Command lift() {
+    return runOnce(() -> pivot.setMechanismPositionSetpoint(pivotUpSetpoint));
+  }
+
+  public Command reverse() {
     return pivot.run(Degrees.of(5)).alongWith(runEnd(() -> inatakeMotor.set(-.5), () -> inatakeMotor.set(0)))
         .finallyDo(() -> pivot.setMechanismPositionSetpoint(Degrees.of(85)));
   }
