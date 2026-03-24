@@ -6,12 +6,27 @@ package frc.robot;
 
 import com.ctre.phoenix6.HootAutoReplay;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.TimedRobot;
+
+
 
 public class Robot extends TimedRobot {
+    private Field2d field = new Field2d();
+
+    @Override
+    public void robotInit() {
+        // Publish the field to SmartDashboard/NT4
+        SmartDashboard.putData("Field", field);
+    }
     private Command m_autonomousCommand;
 
     private final RobotContainer m_robotContainer;
@@ -21,16 +36,27 @@ public class Robot extends TimedRobot {
         .withTimestampReplay()
         .withJoystickReplay();
 
-    private final boolean kUseLimelight = false;
+    private final boolean kUseLimelight = true;
 
     public Robot() {
         m_robotContainer = new RobotContainer();
+
+         CameraServer.startAutomaticCapture(0);
+
+        // Optional: configure resolution, FPS, etc.
+        var camera = CameraServer.startAutomaticCapture();
+        camera.setResolution(320, 240);
+        camera.setFPS(15);
     }
 
     @Override
     public void robotPeriodic() {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
+
+          // Example pose — replace with your odometry pose
+        Pose2d currentPose = new Pose2d(3.0, 2.0, Rotation2d.fromDegrees(90));
+        field.setRobotPose(currentPose);
 
         /*
          * This example of adding Limelight is very simple and may not be sufficient for on-field use.

@@ -59,7 +59,7 @@ public class RobotContainer {
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
 
-    private final AngularVelocity shooterSpeed = RotationsPerSecond.of(70);
+    private final AngularVelocity shooterSpeed = RotationsPerSecond.of(50);
 
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
@@ -100,7 +100,7 @@ public class RobotContainer {
         joystick.b().whileTrue(shooter.shoot(shooterSpeed)); // Hold B to run shooter and indexer
         joystick.povUp().whileTrue(climber.extend()); // Hold POV up to extend the climber
         joystick.povDown().whileTrue(climber.retract()); // Hold POV down to retract the climber
-
+        joystick.y().whileTrue(complexCommands.aimAndShoot(RPM.of(5000),Meters.of(2.54)));
         //joystick.y().whileTrue(shooter.shoot(shooterSpeed)); // Hold to shoot without prior aiming
 
         // Reset the field-centric heading on left bumper press.
