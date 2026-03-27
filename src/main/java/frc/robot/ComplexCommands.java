@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Seconds;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -36,7 +37,7 @@ public class ComplexCommands {
     private final Angle aimAngleError = Degrees.of(3); // Good enough rotation error
 
     private SwerveRequest.RobotCentricFacingAngle aimRequest = new RobotCentricFacingAngle()
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage).withHeadingPID(7, 0, 0);
 
     public ComplexCommands(Climber climber, CommandSwerveDrivetrain drivetrain, Intake intake, Shooter shooter) {
         this.climber = climber;
@@ -61,7 +62,7 @@ public class ComplexCommands {
         if (alliance.get() == Alliance.Blue || alliance.isEmpty()) {
             return blueHubTranslation.minus(drivetrain.getState().Pose.getTranslation());
         } else {
-            return redHubTranslation.minus(drivetrain.getState().Pose.getTranslation());
+            return drivetrain.getState().Pose.getTranslation().minus(redHubTranslation);
         }
     }
 
@@ -72,12 +73,12 @@ public class ComplexCommands {
      * @param aimDistance Distance from the hub
      * @param kP          Gain to reach the set distance based on distance error
      */
-    private void aimRobot(Distance aimDistance, double kP) {
+    private void aimRobot(Distance aimDistance, double kP, Supplier<Double> sidewaysMovement) {
         Translation2d diff = diffFromHub();
         Rotation2d targetDirection = diff.getAngle();
         LinearVelocity velocity = Meters.of(diff.getNorm()).minus(aimDistance).times(kP).per(Seconds);
-        drivetrain.applyRequest(
-                () -> aimRequest.withVelocityX(velocity).withVelocityY(0)
+        drivetrain.runRequest(
+                () -> aimRequest.withVelocityX(velocity).withVelocityY(sidewaysMovement.get())
                         .withTargetDirection(targetDirection));
     }
 
@@ -89,16 +90,15 @@ public class ComplexCommands {
      * @param aimDistance Distance from the hub to shoot from
      * @return Command that performs the task
      */
-    public Command aimAndShoot(AngularVelocity speed, Distance aimDistance) {
-        return Commands.deadline(
-                drivetrain.run(() -> aimRobot(aimDistance, 2)).until(() -> {
+    public Command aimAndShoot(AngularVelocity speed, Distance aimDistance, Supplier<Double> sidewaysMovement) {
+        return Commands.parallel(
+                drivetrain.run(() -> aimRobot(aimDistance, 2, sidewaysMovement)),
+                shooter.shootNoIndexer(speed).until(() -> {
                     Translation2d diff = diffFromHub();
                     Distance currDistance = Meters.of(diff.getNorm());
                     return diff.getAngle().getMeasure().lt(aimAngleError)
                             && currDistance.minus(aimDistance).lt(aimDistError);
-                }),
-                shooter.shootNoIndexer(speed))
-                .andThen(shooter.shoot(speed));
+                }).andThen(shooter.shoot(speed)));
     }
 
     /**
