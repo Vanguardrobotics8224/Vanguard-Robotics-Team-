@@ -92,7 +92,7 @@ public class ComplexCommands {
      */
     public Command aimAndShoot(AngularVelocity speed, Distance aimDistance, Supplier<Double> sidewaysMovement) {
         return Commands.parallel(
-                drivetrain.run(() -> aimRobot(aimDistance, 2, sidewaysMovement)),
+                drivetrain.run(() -> aimRobot(aimDistance, 1, sidewaysMovement)),
                 shooter.shootNoIndexer(speed).until(() -> {
                     Translation2d diff = diffFromHub();
                     Distance currDistance = Meters.of(diff.getNorm());
