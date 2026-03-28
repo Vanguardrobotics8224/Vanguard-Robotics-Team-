@@ -100,7 +100,7 @@ public class RobotContainer {
         joystick.b().whileTrue(shooter.shoot(shooterSpeed)); // Hold B to run shooter and indexer
         joystick.povUp().whileTrue(climber.extend()); // Hold POV up to extend the climber
         joystick.povDown().whileTrue(climber.retract()); // Hold POV down to retract the climber
-        joystick.y().whileTrue(complexCommands.aimAndShoot(RPM.of(0),Meters.of(2.54), () -> -joystick.getLeftX() * MaxSpeed));
+        joystick.y().whileTrue(complexCommands.aim(Meters.of(2.54), () -> -joystick.getLeftX() * MaxSpeed));
         //joystick.y().whileTrue(shooter.shoot(shooterSpeed)); // Hold to shoot without prior aiming
 
         // Reset the field-centric heading on left bumper press.

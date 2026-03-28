@@ -90,15 +90,8 @@ public class ComplexCommands {
      * @param aimDistance Distance from the hub to shoot from
      * @return Command that performs the task
      */
-    public Command aimAndShoot(AngularVelocity speed, Distance aimDistance, Supplier<Double> sidewaysMovement) {
-        return Commands.parallel(
-                drivetrain.run(() -> aimRobot(aimDistance, 1, sidewaysMovement)),
-                shooter.shootNoIndexer(speed).until(() -> {
-                    Translation2d diff = diffFromHub();
-                    Distance currDistance = Meters.of(diff.getNorm());
-                    return diff.getAngle().getMeasure().lt(aimAngleError)
-                            && currDistance.minus(aimDistance).lt(aimDistError);
-                }).andThen(shooter.shoot(speed)));
+    public Command aim(Distance aimDistance, Supplier<Double> sidewaysMovement) {
+        return drivetrain.run(() -> aimRobot(aimDistance, 1, sidewaysMovement));
     }
 
     /**
